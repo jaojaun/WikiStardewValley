@@ -7,6 +7,7 @@ import { styles } from './style';
 import { ImageBackgroundComponent } from 'react-native';
 import { ToastAndroid } from 'react-native';
 import { Platform } from 'react-native';
+import { InputRound } from './components';
 
 export interface LoginScreenProps {
     navigation:any 
@@ -28,14 +29,10 @@ export const LoginScreen   = () => {
         //Espera 1sec
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        if (email == 'teste@teste.com' && senha == '123456')
+        if (email.trim() == 'teste@teste.com' && senha == '123456')
            nav.navigate('drawer');
         else 
-            if (Platform.OS == "android")
-                //Toast: pop-up de alerta
-                ToastAndroid.show("Email ou senha incorreta", ToastAndroid.SHORT)
-            else 
-                setErro("Email ou senha incorreta")
+            console.log('Email ou senha incorreta!')
     }
 
     return (
@@ -55,28 +52,27 @@ export const LoginScreen   = () => {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 <Text style={styles.modalText}>Login</Text>
-                                <Input placeholder='Digite seu E-mail' 
-                                    inputContainerStyle={styles.inputCont} 
-                                    leftIcon={{ name:'user', type:'font-awesome', color:'black' }}
-                                    value={email}
-                                    onChangeText={(email) => setEmail(email)}
+                                <InputRound 
+                                    icon='user' 
+                                    placeholder='Digite seu E-mail'
+                                    onChangeText={setEmail}
                                 />
-                                <Input placeholder='Digite sua Senha' 
-                                    inputContainerStyle={styles.inputCont} 
-                                    secureTextEntry leftIcon={{ name:'lock', type:'font-awesome', color:'black' }}
-                                    value={senha}
-                                    onChangeText={(senha) => setSenha(senha)}    
+                                <InputRound
+                                    icon='lock' 
+                                    placeholder='Digite sua senha'
+                                    onChangeText={setSenha}
+                                    senha={true}
                                 />
                                 <Pressable
                                     style={[styles.button, styles.buttonModal]}
-                                    onPress={() => {
-                                    nav.navigate('drawer')
+                                        onPress={() => {
+                                            nav.navigate('drawer')
                                     }}>
                                     <Text style={styles.textStyle}>Logar</Text> 
                                 </Pressable>
                                 <Pressable
                                     style={[styles.button, styles.buttonModal]}
-                                    onPress={() => setModalVisibleLogin(!modalVisibleLogin)}>
+                                        onPress={logar}>
                                     <Text style={styles.textStyle}>Fechar</Text>
                                 </Pressable>
                             </View>
@@ -100,10 +96,28 @@ export const LoginScreen   = () => {
                             <View style={styles.centeredView}>
                                 <View style={styles.modalView}>
                                     <Text style={styles.modalText}>Cadastro</Text>
-                                    <Input placeholder='Digite seu Nome' inputContainerStyle={styles.inputCont} leftIcon={{ name:'user', type:'font-awesome', color:'black' }}/>
-                                    <Input placeholder='Digite seu E-mail' inputContainerStyle={styles.inputCont} leftIcon={{ name:'user', type:'font-awesome', color:'black' }}/>
-                                    <Input placeholder='Digite sua Senha' inputContainerStyle={styles.inputCont} secureTextEntry leftIcon={{ name:'lock', type:'font-awesome', color:'black' }}/>
-                                    <Input placeholder='Confirme sua Senha' inputContainerStyle={styles.inputCont} secureTextEntry leftIcon={{ name:'lock', type:'font-awesome', color:'black' }}/>
+                                    <InputRound 
+                                        icon='user' 
+                                        placeholder='Digite seu nome'
+                                        onChangeText={(texto) => console.log(texto)}
+                                    />
+                                    <InputRound 
+                                        icon='user' 
+                                        placeholder='Digite seu E-mail'
+                                        onChangeText={setEmail}
+                                    />
+                                    <InputRound
+                                        icon='lock' 
+                                        placeholder='Digite sua senha'
+                                        onChangeText={setSenha}
+                                        senha
+                                    />
+                                    <InputRound
+                                        icon='lock' 
+                                        placeholder='Confirme sua senha'
+                                        onChangeText={setSenha}
+                                        senha
+                                    />
                                     <Pressable
                                         style={[styles.button, styles.buttonModal]}
                                         onPress={() => {
