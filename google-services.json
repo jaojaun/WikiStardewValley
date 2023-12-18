@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "616624010685",
+    "project_id": "wikistardewvalley",
+    "storage_bucket": "wikistardewvalley.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616624010685:android:943ecf0672a3f6574dced4",
+        "android_client_info": {
+          "package_name": "com.ajcompany.stardewwiki"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhjSEPK8I7sCp1Avl9Rcj-MK2_n02QTQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
