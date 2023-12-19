@@ -11,8 +11,8 @@ const Stack = createStackNavigator();
 export const MainNavigation = () => (
     <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="login" component={LoginScreen}/>
             <Stack.Screen name="drawer" component={DrawerManu}/>
+            <Stack.Screen name="login" component={LoginScreen}/>
         </Stack.Navigator>
     </NavigationContainer>
 )

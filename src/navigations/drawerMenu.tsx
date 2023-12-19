@@ -8,6 +8,7 @@ import { Button } from "@rneui/base";
 import { getAuth } from "firebase/auth";
 import { LoginScreen } from "../screens/login";
 import { useNavigation } from "@react-navigation/native";
+import { ItensScreen } from "../screens/itens";
 
 const Drawer = createDrawerNavigator();
 const navigation = useNavigation();
@@ -24,10 +25,8 @@ export const DrawerManu = () => (
             <Drawer.Screen name="perfil" component={PerfilScreen}
                 options={{ drawerLabel: 'Perfil' }}
             />
-            <Button type="clear" title="Sair" onPress={() => {
-                const auth = getAuth();
-                auth.signOut();
-                
-            }}/>
+            <Drawer.Screen name="item" component={ItensScreen}
+                options={{ drawerLabel: 'Itens' }}
+            />
         </Drawer.Navigator>
 ) 

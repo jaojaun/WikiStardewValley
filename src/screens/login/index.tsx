@@ -150,7 +150,7 @@ export const LoginScreen   = (setUser: any) => {
                                             />
                                             <Pressable
                                                 style={[styles.button, styles.buttonModal]}
-                                                onPress={cadastrar}>
+                                                onPress={() =>cadastrar}>
                                                 <Text style={styles.textStyle}>Cadastrar</Text>
                                             </Pressable>
                                             <Pressable
