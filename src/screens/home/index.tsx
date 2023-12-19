@@ -3,8 +3,7 @@ import { View, Text, ImageBackground, StyleSheet, Image, ScrollView} from 'react
 import { useNavigation, DrawerActions, useRoute} from '@react-navigation/core';
 import { styles } from './style';
 import { Avatar } from '@rneui/themed';
-import { HeaderScreen } from '../header';
-import { Icon } from '@rneui/base';
+
 
 export interface HomeScreenProps {
     navigation:any

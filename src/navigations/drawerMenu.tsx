@@ -4,8 +4,13 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { HomeScreen } from "../screens/home";
 import { BioScreen } from "../screens/bio";
 import { PerfilScreen } from "../screens/perfil";
+import { Button } from "@rneui/base";
+import { getAuth } from "firebase/auth";
+import { LoginScreen } from "../screens/login";
+import { useNavigation } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
+const navigation = useNavigation();
 
 export const DrawerManu = () => (
 
@@ -19,5 +24,10 @@ export const DrawerManu = () => (
             <Drawer.Screen name="perfil" component={PerfilScreen}
                 options={{ drawerLabel: 'Perfil' }}
             />
+            <Button type="clear" title="Sair" onPress={() => {
+                const auth = getAuth();
+                auth.signOut();
+                
+            }}/>
         </Drawer.Navigator>
 ) 

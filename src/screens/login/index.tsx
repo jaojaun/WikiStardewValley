@@ -7,8 +7,7 @@ import { ToastAndroid } from 'react-native';
 import { InputRound } from './components';
 import { Formik } from 'formik';
 import "firebase/firestore";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../../config/firebase';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@firebase/auth";
 
 export interface LoginScreenProps {
     navigation:any 
@@ -20,8 +19,9 @@ export const LoginScreen   = (setUser: any) => {
     const [modalVisibleCad, setModalVisibleCad] = React.useState(false);
     const nav = useNavigation<any>();
     const [ erro, setErro ] = React.useState('');
+    const auth = getAuth();
 
-    const [name, setName] = React.useState();
+    //const [name, setName] = React.useState();
     const [email, setEmail] = React.useState();
     const [password, setPassword] = React.useState();
 
@@ -37,24 +37,6 @@ export const LoginScreen   = (setUser: any) => {
                     setErro('Email ou senha incorreta!');
             })
     };
-
-    /**const handleLogin = async ({email, password}: any) => {
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-
-            console.log(user);
-            setUser(user);
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // ..
-            console.log(errorMessage);
-        });
-    };*/
 
     const cadastrar = async (dados: { email: string; senha: string; }) => {
         createUserWithEmailAndPassword(auth, dados.email, dados.senha)
