@@ -7,7 +7,7 @@ export interface InputRoundProps {
     placeholder: string;
     senha?: boolean;
     icon: string;
-    onBlur?(): void;
+    onBlur?: any;
     onChangeText(texto: string): void;
 }
 

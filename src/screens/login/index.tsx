@@ -1,42 +1,73 @@
 import * as React from 'react';
-import { View, Text,Alert, Modal, ImageBackground, Image, Pressable,  StyleSheet} from 'react-native';
-import { Input} from '@rneui/themed/dist/Input';
-import { Button} from '@rneui/themed/dist/Button';
+import { View, Text,Alert, Modal, ImageBackground, Image, Pressable,  Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import * as yup from 'yup';
 import { styles } from './style';
-import { ImageBackgroundComponent } from 'react-native';
 import { ToastAndroid } from 'react-native';
-import { Platform } from 'react-native';
 import { InputRound } from './components';
-import { Formik, validateYupSchema } from 'formik';
+import { Formik } from 'formik';
+import "firebase/firestore";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../../config/firebase';
 
 export interface LoginScreenProps {
     navigation:any 
 }
 
-export const LoginScreen   = () => {
+export const LoginScreen   = (setUser: any) => {
     
     const [modalVisibleLogin, setModalVisibleLogin] = React.useState(false);
     const [modalVisibleCad, setModalVisibleCad] = React.useState(false);
     const nav = useNavigation<any>();
-    const [ erro, setErro ] = React.useState('')
+    const [ erro, setErro ] = React.useState('');
 
-    const logar = async ({email, senha}: any) => {
+    const [name, setName] = React.useState();
+    const [email, setEmail] = React.useState();
+    const [password, setPassword] = React.useState();
+
+    const logar = async (dados: { email: string; senha: string; }) => {
         setErro(""); //Limpa o erro
 
-        //Espera 1sec
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        signInWithEmailAndPassword(auth, dados.email, dados.senha)
+            .then(usuario => nav.navigate('drawer'))
+            .catch(erro => {
+                if (Platform.OS == "android")
+                    ToastAndroid.show("E-mail ou senha incorreta", 3000);
+                else 
+                    setErro('Email ou senha incorreta!');
+            })
+    };
 
-        if (email.trim() == 'teste@teste.com' && senha == '123456')
-           nav.navigate('drawer');
-        else 
-            console.log('Email ou senha incorreta!')
-    }
+    /**const handleLogin = async ({email, password}: any) => {
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
 
-    function setEmail(texto: string): void {
-        throw new Error('Function not implemented.');
-    }
+            console.log(user);
+            setUser(user);
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+            console.log(errorMessage);
+        });
+    };*/
+
+    const cadastrar = async (dados: { email: string; senha: string; }) => {
+        createUserWithEmailAndPassword(auth, dados.email, dados.senha)
+            .then(usuario => {
+                ToastAndroid.show('Usuário criado com sucesso', ToastAndroid.LONG);
+            })
+            .catch(erro => {
+                let msg = 'Não foi possivel cadastar usuário';
+                if (erro.code == 'auth/email-already-in-use') msg = 'Este E-mail ja esta cadastrado'
+                ToastAndroid.show( msg, ToastAndroid.LONG);
+            })
+        setModalVisibleCad(false);
+        }
 
     return (
         <ImageBackground source={require('./../../../assets/img/background.png')} style={styles.background}>
@@ -53,7 +84,7 @@ export const LoginScreen   = () => {
                 })}
                 onSubmit={logar}
             >
-                {({handleChange, handleSubmit, handleBlur,isSubmitting,touched, errors}) => (
+                {({handleChange, handleSubmit, handleBlur,isSubmitting,errors}) => (
                     <View style={styles.mainView}>
                         <View style={styles.centeredView}>
                             <Modal
@@ -117,7 +148,6 @@ export const LoginScreen   = () => {
                                     transparent={true}
                                     visible={modalVisibleCad}
                                     onRequestClose={() => {
-                                        Alert.alert('Modal has been closed.');
                                         setModalVisibleCad(!modalVisibleCad);
                                     }}>
                                     <View style={styles.centeredView}>
@@ -125,31 +155,20 @@ export const LoginScreen   = () => {
                                             <Text style={styles.modalText}>Cadastro</Text>
                                             <InputRound 
                                                 icon='user' 
-                                                placeholder='Digite seu nome'
-                                                onChangeText={(texto) => console.log(texto)}
-                                            />
-                                            <InputRound 
-                                                icon='user' 
                                                 placeholder='Digite seu E-mail'
-                                                onChangeText={handleChange => ('email')}
+                                                onBlur={handleBlur("email")}
+                                                onChangeText={handleChange('email')}
                                             />
                                             <InputRound
                                                 icon='lock' 
                                                 placeholder='Digite sua senha'
-                                                onChangeText={handleChange => ('senha')}
-                                                senha
-                                            />
-                                            <InputRound
-                                                icon='lock' 
-                                                placeholder='Confirme sua senha'
-                                                onChangeText={handleChange => ('senha')}
+                                                onBlur={handleBlur("senha")}
+                                                onChangeText={handleChange('senha')}
                                                 senha
                                             />
                                             <Pressable
                                                 style={[styles.button, styles.buttonModal]}
-                                                onPress={() => {
-                                                nav.navigate('drawer')
-                                                }}>
+                                                onPress={cadastrar}>
                                                 <Text style={styles.textStyle}>Cadastrar</Text>
                                             </Pressable>
                                             <Pressable
@@ -173,4 +192,8 @@ export const LoginScreen   = () => {
     );
   };
 
+
+function useState(): [any, any] {
+    throw new Error('Function not implemented.');
+}
 
