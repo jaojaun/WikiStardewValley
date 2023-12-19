@@ -9,6 +9,8 @@ import { getAuth } from "firebase/auth";
 import { LoginScreen } from "../screens/login";
 import { useNavigation } from "@react-navigation/native";
 import { ItensScreen } from "../screens/itens";
+import { CadItemScreen } from "../screens/cadIten";
+import { CadPersoScreen } from "../screens/cadPerso";
 
 const Drawer = createDrawerNavigator();
 const navigation = useNavigation();
@@ -27,6 +29,12 @@ export const DrawerManu = () => (
             />
             <Drawer.Screen name="item" component={ItensScreen}
                 options={{ drawerLabel: 'Itens' }}
+            />
+            <Drawer.Screen name="cadItem" component={CadItemScreen}
+                options={{ drawerLabel: 'Cadastro de items' }}
+            />
+            <Drawer.Screen name="cadPerso" component={CadPersoScreen}
+                options={{ drawerLabel: 'Cadastro de personagens' }}
             />
         </Drawer.Navigator>
 ) 

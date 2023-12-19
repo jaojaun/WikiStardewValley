@@ -8,6 +8,9 @@ import { InputRound } from './components';
 import { Formik } from 'formik';
 import "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@firebase/auth";
+import { getFirestore, setDoc, doc } from '@firebase/firestore';
+import { getDoc } from 'firebase/firestore';
+import { useEffect } from 'react';
 
 export interface LoginScreenProps {
     navigation:any 
@@ -20,6 +23,7 @@ export const LoginScreen   = (setUser: any) => {
     const nav = useNavigation<any>();
     const [ erro, setErro ] = React.useState('');
     const auth = getAuth();
+    const db = getFirestore();
 
     //const [name, setName] = React.useState();
     const [email, setEmail] = React.useState();
@@ -38,10 +42,19 @@ export const LoginScreen   = (setUser: any) => {
             })
     };
 
-    const cadastrar = async (dados: { email: string; senha: string; }) => {
-        createUserWithEmailAndPassword(auth, dados.email, dados.senha)
-            .then(usuario => {
-                ToastAndroid.show('Usuário criado com sucesso', ToastAndroid.LONG);
+    const [ usuario, setUsuario ] = useState<Usuario>({email: '', senha: '', nome: ''});
+    useEffect(() => {
+        if (auth.currentUser) {getDoc(doc(db, 'usuarios', auth.currentUser.uid))
+                .then(dados => setUsuario(dados.data()))
+        }
+    }, []);
+
+    const Handlecadastrar = async ({name, email, senha}: any) => {
+        await createUserWithEmailAndPassword(auth, email, senha)
+            .then((usuario) => {
+                        setDoc(doc(db, 'users', usuario.user.uid), {
+                            email, name
+                        })
             })
             .catch(erro => {
                 let msg = 'Não foi possivel cadastar usuário';
@@ -57,10 +70,11 @@ export const LoginScreen   = (setUser: any) => {
             <Image source={require('./../../../assets/img/Wiki.png')} style={styles.wiki}/>
 
             <Formik
-                initialValues={{ email:'', senha:'' }}
-                validationSchema={yup.object().shape({
+                initialValues={usuario}
+                validationSchema={yup.object({
                     email: yup.string().required('O campo E-mail é obrigatório!')
                                 .email('O campo precisa ser um E-mail Válido!'),
+                    nome: yup.string().required('O campo nome precisa existir'),
                     senha: yup.string().required('O campo Senha é obrigatório!')
                                 .min(6, 'A senha deve ter no minimo 6 caracteres!')
                 })}
@@ -150,7 +164,7 @@ export const LoginScreen   = (setUser: any) => {
                                             />
                                             <Pressable
                                                 style={[styles.button, styles.buttonModal]}
-                                                onPress={() =>cadastrar}>
+                                                onPress={Handlecadastrar}>
                                                 <Text style={styles.textStyle}>Cadastrar</Text>
                                             </Pressable>
                                             <Pressable
@@ -176,6 +190,10 @@ export const LoginScreen   = (setUser: any) => {
 
 
 function useState(): [any, any] {
+    throw new Error('Function not implemented.');
+}
+
+function setModalVisibleCad(arg0: boolean) {
     throw new Error('Function not implemented.');
 }
 
